@@ -132,8 +132,7 @@
     if (userDataEl) {
       userDataEl.innerHTML =
         '<span class="hero-eyebrow">Te invito a mi cumple</span>' +
-        '<h1 class="hero-name">' + escapeHtml(inv.name) + '</h1>' +
-        '<span class="hero-emoji">🎳 🎂</span>';
+        '<h1 class="hero-name">' + escapeHtml(inv.name) + '</h1>';
     }
 
     // Datos del evento (cards de info)
