@@ -1071,20 +1071,23 @@ body.invite-page {
 
 /* Fondo fixed con la imagen + overlay oscuro abajo para legibilidad */
 body.invite-page .relleno {
-  position: fixed;
-  inset: 0;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  position: fixed !important;
+  inset: 0 !important;
+  height: 100% !important;
+  width: 100% !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  box-shadow: none !important;
   z-index: 0;
 }
 .relleno-overlay {
   position: fixed;
   inset: 0;
   background: linear-gradient(180deg,
-    rgba(0,0,0,0.15) 0%,
-    rgba(0,0,0,0.55) 60%,
-    rgba(255, 244, 230, 0.95) 100%);
+    transparent 0%,
+    transparent 85%,
+    rgba(255, 244, 230, 0.9) 100%);
   z-index: 1;
   pointer-events: none;
 }
@@ -1142,7 +1145,15 @@ body.invite-page .relleno {
   line-height: 1.05;
   margin: 8px 0 6px;
   color: #fff;
-  text-shadow: 0 4px 24px rgba(0,0,0,0.5);
+  /* Combinacion: contorno fino + sombra difusa para legibilidad
+     sobre cualquier fondo, sin necesidad de overlay oscuro */
+  text-shadow:
+    -1px -1px 0 rgba(0,0,0,0.5),
+     1px -1px 0 rgba(0,0,0,0.5),
+    -1px  1px 0 rgba(0,0,0,0.5),
+     1px  1px 0 rgba(0,0,0,0.5),
+     0 2px 6px rgba(0,0,0,0.9),
+     0 6px 20px rgba(0,0,0,0.7);
   letter-spacing: -1px;
   word-break: break-word;
 }
