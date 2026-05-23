@@ -305,43 +305,36 @@
     var btnRight = document.querySelector('.btn-right');
     var slider   = document.querySelector('#slider');
     var sections = document.querySelectorAll('.slider-section');
+    var dots     = document.querySelectorAll('#carouselDots .dot');
     if (!slider || !sections.length) return;
 
     var counter = 0;
-    var operacion = 0;
     var widthImg = 100 / sections.length;
 
-    function moveRight() {
-      if (counter >= sections.length - 1) {
-        counter = 0;
-        operacion = 0;
-        slider.style.transform = 'translate(-' + operacion + '%)';
-        slider.style.transition = 'none';
-        return;
-      }
-      counter++;
-      operacion += widthImg;
-      slider.style.transform = 'translate(-' + operacion + '%)';
-      slider.style.transition = 'all ease .6s';
+    function updateDots() {
+      dots.forEach(function (d, i) {
+        if (i === counter) d.classList.add('active');
+        else d.classList.remove('active');
+      });
     }
 
-    function moveLeft() {
-      counter--;
-      if (counter < 0) {
-        counter = sections.length - 1;
-        operacion = widthImg * (sections.length - 1);
-        slider.style.transform = 'translate(-' + operacion + '%)';
-        slider.style.transition = 'none';
-        return;
-      }
-      operacion -= widthImg;
+    function goTo(idx, animate) {
+      counter = (idx + sections.length) % sections.length;
+      var operacion = widthImg * counter;
       slider.style.transform = 'translate(-' + operacion + '%)';
-      slider.style.transition = 'all ease .6s';
+      slider.style.transition = animate ? 'all ease .6s' : 'none';
+      updateDots();
     }
 
-    if (btnLeft) btnLeft.addEventListener('click', moveLeft);
-    if (btnRight) btnRight.addEventListener('click', moveRight);
-    setInterval(moveRight, 3000);
+    if (btnLeft)  btnLeft.addEventListener('click', function () { goTo(counter - 1, true); });
+    if (btnRight) btnRight.addEventListener('click', function () { goTo(counter + 1, true); });
+    dots.forEach(function (d) {
+      d.addEventListener('click', function () {
+        goTo(parseInt(d.dataset.slide, 10), true);
+      });
+    });
+    setInterval(function () { goTo(counter + 1, true); }, 4000);
+    updateDots();
   }
 
   // ============================================
