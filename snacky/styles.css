@@ -572,15 +572,24 @@ body.form-page {
   background: linear-gradient(135deg, #ffe8d6 0%, #ffd6b3 100%) !important;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   min-height: 100vh;
-  padding: 24px 16px;
-  box-sizing: border-box;
+  padding: 24px 16px !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
+  max-width: 100vw !important;
+  margin: 0 !important;
+  overflow-x: hidden;
 }
 body.form-page .wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box;
 }
+body.form-page * { box-sizing: border-box; }
 
 /* Card que contiene el form */
 .form-card {
@@ -703,11 +712,22 @@ h2.form-section-title {
 /* Fila lado-a-lado (fecha + hora) */
 .form-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 12px;
+  width: 100%;
+  max-width: 100%;
 }
+.form-row .form-group { min-width: 0; max-width: 100%; }
 @media (max-width: 380px) {
-  .form-row { grid-template-columns: 1fr; }
+  .form-row { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* Asegurar que inputs nunca empujen el contenedor */
+.form-card input,
+.form-card select,
+.form-card textarea {
+  min-width: 0;
+  max-width: 100%;
 }
 
 /* Telefono con prefijo +54 */
