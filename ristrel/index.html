@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta property="og:image" content="https://teinvito.netlify.app/images/logo.png">
+
+<title>Invitaciónes Virtuales</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="shortcut icon" href="images/logo.png">
+</head>
+<body>
+
+<div class="wrapper">
+  <div class="container">
+    <img src="images/logoS.png" alt="Imagen de invitación" class="invitation-image2">
+  
+    <form id="userForm">
+      <p>Ingrese los datos para generar la invitación:</p>
+      <div class="form-group">
+        <label for="name">Nombre del organizador:</label>
+        <input type="text" id="name" required>
+      </div>
+      <div class="form-group">
+        <label for="birthday">Fecha de la fiesta:</label>
+        <input type="date" id="birthday" required>
+      </div>
+      <div class="form-group">
+        <label for="time">Hora de Inicio del evento</label>
+        <input type="time" id="time" required>
+      </div>      
+      <div class="form-group">
+        <label for="time">Hora de finalizacion del evento</label>
+        <input type="time" id="time2" required>
+      </div>      
+      <div class="form-group">
+        <label for="background">Selecciona una Tematica:</label>
+        <select id="background" name="background" required>
+            <option value="" disabled selected hidden>Elige la Tematica</option>    
+                <option value="Cumpleaños">Cumpleaños</option>
+                <option value="Comunion">Comunion</option>
+                <option value="Evento">Evento empresarial</option>
+                <option value="Bautismo">Bautismo</option>
+          </option>
+        </optgroup>
+        </select>
+      </div>
+      <div id="formulario-container"></div>
+      <div class="form-group">
+        <label for="phone">Número de Celular:</label>
+        <input type="tel" id="phone" required placeholder="Ejemplo: 1112345678">
+      </div>
+      
+      <button type="submit">Guardar</button>
+    </form>
+  </div>
+
+  <footer class="footer">
+    <div class="social-media">
+      <a href="https://instagram.com/snackbowling" target="_blank"><i class="fab fa-instagram"></i></a>
+      <a href="https://facebook.com/snackbowling" target="_blank"><i class="fab fa-facebook"></i></a>
+      <a href="https://www.linkedin.com/company/71763114/" target="_blank"><i class="fab fa-linkedin"></i></a>
+    </div>
+    <a href="https://tucumple.com.ar/"><img class="logo" src="images/logoByn.svg" alt=""></a>
+  </footer>
+</div>
+
+<script src="index.js"></script>
+<!-- Agregar la biblioteca Font Awesome -->
+<script src="https://kit.fontawesome.com/8cced7e539.js" crossorigin="anonymous"></script>
+
+</body>
+</html>

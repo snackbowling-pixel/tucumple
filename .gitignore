@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Build artifacts
+dist/bundle.min.js
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Claude local
+.claude/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Env files (no usamos pero por las dudas)
+.env
+.env.local
+.env*.local

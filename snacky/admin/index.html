@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Snacky Admin - Gestión de Fondos</title>
+  <link rel="shortcut icon" href="../images/logo.png">
+  <link rel="stylesheet" href="admin.css">
+  <script src="https://kit.fontawesome.com/8cced7e539.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+  <!-- Pantalla de login -->
+  <div id="loginView" class="view">
+    <div class="login-card">
+      <img src="../images/logoS.png" alt="Snacky" class="login-logo">
+      <h1>Panel de Administración</h1>
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" required autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label for="password">Contraseña</label>
+          <input type="password" id="password" required autocomplete="current-password">
+        </div>
+        <button type="submit" id="loginBtn">Ingresar</button>
+        <div id="loginError" class="error-msg" hidden></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Pantalla principal del admin -->
+  <div id="adminView" class="view" hidden>
+    <header class="admin-header">
+      <div class="header-left">
+        <img src="../images/logoS.png" alt="Snacky" class="admin-logo">
+        <h1>Gestión de Fondos</h1>
+      </div>
+      <div class="header-right">
+        <span id="userEmail" class="user-email"></span>
+        <a href="migrate.html" class="btn-secondary" title="Migrar imágenes legacy">
+          <i class="fa-solid fa-arrows-rotate"></i> Migrar
+        </a>
+        <button id="logoutBtn" class="btn-secondary">
+          <i class="fa-solid fa-right-from-bracket"></i> Salir
+        </button>
+      </div>
+    </header>
+
+    <main class="admin-main">
+      <section class="metrics-section">
+        <h2><i class="fa-solid fa-chart-line"></i> Métricas</h2>
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <span class="metric-label">Invitaciones totales</span>
+            <span class="metric-value" id="metricTotal">—</span>
+          </div>
+          <div class="metric-card">
+            <span class="metric-label">Última semana</span>
+            <span class="metric-value" id="metricWeek">—</span>
+          </div>
+          <div class="metric-card">
+            <span class="metric-label">Vistas totales</span>
+            <span class="metric-value" id="metricViews">—</span>
+          </div>
+          <div class="metric-card">
+            <span class="metric-label">Con foto propia</span>
+            <span class="metric-value" id="metricCustomPhoto">—</span>
+          </div>
+        </div>
+        <div class="metrics-extra">
+          <div class="metrics-block">
+            <h3>Fondos más usados</h3>
+            <ol id="topBackgrounds" class="top-list">
+              <li class="muted">Cargando…</li>
+            </ol>
+          </div>
+          <div class="metrics-block">
+            <h3>Últimas invitaciones</h3>
+            <ul id="recentInvitations" class="recent-list">
+              <li class="muted">Cargando…</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="upload-section">
+        <h2><i class="fa-solid fa-cloud-arrow-up"></i> Subir nuevo fondo</h2>
+        <form id="uploadForm">
+          <div class="upload-row">
+            <div class="form-group">
+              <label for="bgName">Nombre del fondo</label>
+              <input type="text" id="bgName" placeholder="Ej: Pikachu" required>
+            </div>
+            <div class="form-group">
+              <label for="bgCategory">Categoría</label>
+              <select id="bgCategorySelect" required>
+                <option value="" disabled selected>Elegí una categoría…</option>
+                <option value="__new__">➕ Crear nueva categoría</option>
+              </select>
+              <input type="text" id="bgCategoryNew" placeholder="Nombre de la nueva categoría" hidden>
+            </div>
+            <div class="form-group">
+              <label for="bgFile">Imagen (JPG/PNG/WebP)</label>
+              <input type="file" id="bgFile" accept="image/jpeg,image/png,image/webp" required>
+            </div>
+          </div>
+          <div id="uploadPreview" class="upload-preview" hidden>
+            <img id="previewImg" alt="Preview">
+            <span id="previewInfo" class="preview-info"></span>
+          </div>
+          <button type="submit" id="uploadBtn">
+            <i class="fa-solid fa-upload"></i> Subir fondo
+          </button>
+          <div id="uploadStatus" class="status-msg" hidden></div>
+        </form>
+      </section>
+
+      <section class="list-section">
+        <div class="list-header">
+          <h2><i class="fa-solid fa-images"></i> Fondos existentes (<span id="bgCount">0</span>)</h2>
+          <div class="filter-bar">
+            <input type="text" id="searchInput" placeholder="🔍 Buscar fondo…">
+            <select id="filterCategory">
+              <option value="">Todas las categorías</option>
+            </select>
+          </div>
+        </div>
+        <div id="backgroundsGrid" class="bg-grid"></div>
+        <div id="emptyState" class="empty-state" hidden>
+          <p>No hay fondos todavía. Subí el primero con el formulario de arriba.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Modal de edición -->
+  <div id="editModal" class="modal" hidden>
+    <div class="modal-content">
+      <h2>Editar fondo</h2>
+      <form id="editForm">
+        <input type="hidden" id="editId">
+        <div class="form-group">
+          <label for="editName">Nombre</label>
+          <input type="text" id="editName" required>
+        </div>
+        <div class="form-group">
+          <label for="editCategorySelect">Categoría</label>
+          <select id="editCategorySelect" required>
+            <option value="__new__">➕ Crear nueva categoría</option>
+          </select>
+          <input type="text" id="editCategoryNew" placeholder="Nombre de la nueva categoría" hidden>
+        </div>
+        <div class="form-group checkbox-group">
+          <label>
+            <input type="checkbox" id="editActive">
+            Activo (visible en formulario público)
+          </label>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" id="cancelEditBtn">Cancelar</button>
+          <button type="submit" class="btn-primary">Guardar cambios</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast notifications -->
+  <div id="toast" class="toast" hidden></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase-config.js"></script>
+  <script src="../js/image-utils.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>

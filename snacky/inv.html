@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta property="og:title" content="Invitación Virtual">
+<meta property="og:description" content="Te invito a mi cumple!">
+<meta property="og:image" content="https://teinvito.netlify.app/images/logo.png">
+<title>Invitación de Cumpleaños</title>
+<link rel="stylesheet" href="styles.css?v=3">
+<link rel="shortcut icon" href="images/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Madimi+One&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body class="invite-page">
+
+<!-- Fondo full-screen con overlay -->
+<div class="relleno"></div>
+<div class="relleno-overlay"></div>
+
+<!-- Logo flotante arriba -->
+<a class="invite-brand" href="https://snackbowling.netlify.app/pages/cumples">
+  <img src="images/logoS.png" alt="Snacky" class="invite-brand-logo">
+</a>
+
+<!-- Hero: nombre del cumpleañero -->
+<div class="invite-hero">
+  <div class="invite-hero-inner" id="userData"></div>
+</div>
+
+<!-- Card principal con detalles -->
+<main class="invite-card">
+
+  <!-- Datos del evento -->
+  <section class="invite-info">
+    <div class="info-row">
+      <div class="info-icon"><i class="fa-solid fa-calendar-day"></i></div>
+      <div class="info-text">
+        <span class="info-label">Fecha</span>
+        <span class="info-value" id="invDate">—</span>
+      </div>
+    </div>
+    <div class="info-row">
+      <div class="info-icon"><i class="fa-solid fa-clock"></i></div>
+      <div class="info-text">
+        <span class="info-label">Horario</span>
+        <span class="info-value" id="invTime">—</span>
+      </div>
+    </div>
+    <div class="info-row">
+      <div class="info-icon"><i class="fa-solid fa-location-dot"></i></div>
+      <div class="info-text">
+        <span class="info-label">Dónde</span>
+        <span class="info-value" id="invVenue">—</span>
+        <a id="mapsLink" class="info-link" href="#" target="_blank" rel="noopener">
+          Ver en Google Maps <i class="fa-solid fa-arrow-up-right-from-square"></i>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Mensaje del cumpleañero (si tiene) -->
+  <div id="customMessageBox" class="custom-message-box" hidden>
+    <span class="custom-message-label" id="customMessageLabel">Mensaje del cumpleañero</span>
+    <p id="customMessageText"></p>
+  </div>
+
+  <!-- Countdown con cajas -->
+  <section class="invite-countdown" id="countdownSection">
+    <h2 class="countdown-title">⏳ ¿Cuánto falta?</h2>
+    <div class="countdown-boxes">
+      <div class="countdown-box">
+        <span class="countdown-num" id="cdDays">—</span>
+        <span class="countdown-unit">días</span>
+      </div>
+      <div class="countdown-box">
+        <span class="countdown-num" id="cdHours">—</span>
+        <span class="countdown-unit">horas</span>
+      </div>
+      <div class="countdown-box">
+        <span class="countdown-num" id="cdMinutes">—</span>
+        <span class="countdown-unit">min</span>
+      </div>
+    </div>
+    <!-- Texto legacy para JS que no use las cajas -->
+    <p id="countdownTimer" hidden></p>
+  </section>
+
+  <!-- CTAs -->
+  <section class="invite-ctas">
+    <!-- Primario: confirmar -->
+    <button id="confirmButton" class="cta cta-primary">
+      <i class="fa-solid fa-user-check"></i>
+      <span>Confirmar Asistencia</span>
+    </button>
+
+    <!-- Secundario: compartir -->
+    <button id="shareButton" class="cta cta-whatsapp">
+      <i class="fa-brands fa-whatsapp"></i>
+      <span>Compartir por WhatsApp</span>
+    </button>
+
+    <!-- Terciarios: lado a lado -->
+    <div class="cta-row">
+      <button id="calendarButton" class="cta cta-ghost">
+        <i class="fa-regular fa-calendar"></i>
+        <span>Calendario</span>
+      </button>
+      <button id="confettiButton" class="cta cta-ghost" aria-label="Lanzar confeti">
+        🎉 Festejar
+      </button>
+    </div>
+  </section>
+
+  <!-- Carrusel promo Snack Bowling -->
+  <section class="invite-promo">
+    <div class="container-carousel">
+      <div class="carruseles" id="slider">
+          <section class="slider-section">
+            <a href="https://snackbowling.netlify.app/pages/cumples">
+              <img src="./images/slider3.png" alt="Cumples Snack Bowling">
+            </a>
+          </section>
+          <section class="slider-section">
+            <img src="./images/slider2.png" alt="">
+          </section>
+          <section class="slider-section">
+            <a href="https://snackbowling.netlify.app/pages/eventos">
+              <img src="./images/slider1.png" alt="Eventos Snack Bowling">
+            </a>
+          </section>
+      </div>
+      <div class="btn-left"><i class='bx bx-chevron-left'></i></div>
+      <div class="btn-right"><i class='bx bx-chevron-right'></i></div>
+    </div>
+  </section>
+</main>
+
+<!-- Modal RSVP -->
+<div id="rsvpModal" class="rsvp-modal" hidden>
+  <div class="rsvp-modal-content">
+    <button type="button" class="rsvp-close" id="rsvpCloseBtn" aria-label="Cerrar">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    <h2>Confirmar asistencia</h2>
+    <p class="rsvp-subtitle">Completá los datos y te abrimos WhatsApp para enviarlos al cumpleañero.</p>
+    <form id="rsvpForm">
+      <div class="rsvp-group">
+        <label for="rsvpName">Tu nombre</label>
+        <input type="text" id="rsvpName" required placeholder="Ej: María González">
+      </div>
+      <div class="rsvp-group">
+        <label for="rsvpGuests">¿Cuántos van?</label>
+        <input type="number" id="rsvpGuests" min="1" max="20" value="1" required>
+      </div>
+      <div class="rsvp-group">
+        <label for="rsvpMessage">Mensaje (opcional)</label>
+        <textarea id="rsvpMessage" rows="2" maxlength="200" placeholder="Ej: vamos llegando un poco tarde"></textarea>
+      </div>
+      <button type="submit" class="rsvp-submit">
+        <i class="fa-brands fa-whatsapp"></i> Enviar por WhatsApp
+      </button>
+    </form>
+  </div>
+</div>
+
+<footer class="invite-footer">
+  <div class="social-media">
+    <a href="https://instagram.com/snackbowling" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+    <a href="https://facebook.com/snackbowling" target="_blank" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+    <a href="https://www.linkedin.com/company/71763114/" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+  </div>
+  <p class="footer-credit">
+    Hecho con <a href="https://tucumple.com.ar/">tu<strong>cumple</strong></a>
+  </p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
+<script src="js/invitaciones.js"></script>
+<script src="https://kit.fontawesome.com/8cced7e539.js" crossorigin="anonymous"></script>
+
+</body>
+</html>

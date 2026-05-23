@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Migrar imágenes legacy - Snacky Admin</title>
+  <link rel="stylesheet" href="admin.css">
+  <script src="https://kit.fontawesome.com/8cced7e539.js" crossorigin="anonymous"></script>
+  <style>
+    .migrate-container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 24px;
+    }
+    .migrate-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 28px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .migrate-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+    .migrate-header h1 { margin: 0; font-size: 1.3rem; }
+    .migrate-desc { color: #6b7280; font-size: 0.95rem; line-height: 1.5; margin-bottom: 20px; }
+    .progress-list {
+      margin-top: 20px;
+      max-height: 400px;
+      overflow-y: auto;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 8px;
+      background: #f9fafb;
+    }
+    .progress-item {
+      padding: 8px 12px;
+      font-size: 0.85rem;
+      border-bottom: 1px solid #f3f4f6;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .progress-item:last-child { border-bottom: none; }
+    .progress-icon { width: 20px; text-align: center; }
+    .progress-icon.pending { color: #9ca3af; }
+    .progress-icon.running { color: #3b82f6; }
+    .progress-icon.success { color: #10b981; }
+    .progress-icon.skip    { color: #6b7280; }
+    .progress-icon.error   { color: #ef4444; }
+    .progress-info { color: #6b7280; font-size: 0.75rem; }
+    .stats-bar {
+      display: flex;
+      gap: 16px;
+      margin: 16px 0;
+      padding: 12px 16px;
+      background: #f3f4f6;
+      border-radius: 8px;
+      font-size: 0.9rem;
+    }
+    .stat { display: flex; flex-direction: column; }
+    .stat-label { color: #6b7280; font-size: 0.75rem; text-transform: uppercase; }
+    .stat-value { font-weight: 700; font-size: 1.1rem; color: #1f2937; }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #6b7280;
+      text-decoration: none;
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+    }
+    .back-link:hover { color: #1f2937; }
+  </style>
+</head>
+<body>
+  <div class="migrate-container">
+    <a href="./index.html" class="back-link">
+      <i class="fa-solid fa-arrow-left"></i> Volver al admin
+    </a>
+
+    <div class="migrate-card">
+      <div class="migrate-header">
+        <i class="fa-solid fa-arrows-rotate" style="color:#f4843e;font-size:1.5rem"></i>
+        <h1>Migrar imágenes legacy a Supabase Storage</h1>
+      </div>
+
+      <p class="migrate-desc">
+        Los fondos cargados con el seed apuntan a <code>/assets/img/fondos/</code> en este servidor.
+        Esta herramienta los descarga, los comprime a WebP, los sube al bucket
+        <code>background-images</code> y actualiza la DB. Es idempotente: lo que ya
+        está migrado se saltea.
+      </p>
+
+      <button id="startBtn">
+        <i class="fa-solid fa-rocket"></i> Iniciar migración
+      </button>
+      <div id="loginRequired" class="error-msg" hidden>
+        ⚠️ Tenés que loguearte primero en <a href="./index.html">el admin</a>.
+      </div>
+
+      <div id="statsBar" class="stats-bar" hidden>
+        <div class="stat">
+          <span class="stat-label">Total</span>
+          <span class="stat-value" id="statTotal">0</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Migrados</span>
+          <span class="stat-value" id="statSuccess" style="color:#10b981">0</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Saltados</span>
+          <span class="stat-value" id="statSkip" style="color:#6b7280">0</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Errores</span>
+          <span class="stat-value" id="statError" style="color:#ef4444">0</span>
+        </div>
+      </div>
+
+      <div id="progressList" class="progress-list" hidden></div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase-config.js"></script>
+  <script src="../js/image-utils.js"></script>
+  <script src="migrate.js"></script>
+</body>
+</html>

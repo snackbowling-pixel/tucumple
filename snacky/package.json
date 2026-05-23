@@ -1,0 +1,23 @@
+{
+  "name": "snacky",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "uglify": "uglifyjs js/*.js -o dist/bundle.min.js",
+    "uglify-watch": "watch 'uglifyjs js/*.js -o dist/bundle.min.js' js/",
+    "uglify-mangle": "uglifyjs js/*.js -o dist/bundle.min.js --mangle"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "uglify-js": "^3.17.4",
+    "watch-cli": "^0.2.3"
+  },
+  "dependencies": {
+    "graceful-fs": "^4.2.11",
+    "minimatch": "^9.0.4"
+  }
+}
+

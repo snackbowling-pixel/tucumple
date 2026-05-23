@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta property="og:title" content="Invitación Virtual">
+<meta property="og:description" content="Te invito a mi cumple!">
+<meta property="og:image" content="https://teinvito.netlify.app/images/logo.png">
+<title>Invitación de Cumpleaños </title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<link rel="shortcut icon" href="images/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- FONTS -->
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Madimi+One&family=Oswald:wght@500&family=Permanent+Marker&family=Russo+One&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Madimi+One&family=Oswald:wght@500&family=Russo+One&display=swap" rel="stylesheet">
+
+<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+<div class="relleno"></div>
+<div >
+  <a class="image-container" href="https://snackbowling.netlify.app/pages/cumples"> 
+    <img src="images/logoS.png"  alt="Imagen de invitación" class="invitation-image scale-in-center ">
+  </a>
+</div>
+
+<div class="invitation-container">
+  <div class="invitation">
+    
+    <div class="header">
+    </div>
+    <div class="userData">
+      <div id="userData"></div>
+    </div>
+    <div class="details">
+      <h4 id="nombreEvento"></h4>
+      <h6 id="direccion"></h6>
+    </div>
+    <div class="footers">
+      <a class="maps boton" href="" target="_blank">
+        <button><i class="fa-solid fa-location-dot"></i> ¿Cómo llegar?</button>
+      </a>
+    </div>
+    
+    <div class="countdown">
+      <h2>¿Cuánto Falta?</h2>
+      <p id="countdownTimer"></p>
+      <div class="footers">
+        <button  id="calendarButton"  ><i class="fa-regular fa-calendar boton"><i class="fa-regular fa-calendar"></i> Agregar a Calendario</i>
+        </button>
+      </div>
+      <div class="footers">
+        <button id="confirmButton"><i class="fa-solid fa-user-plus"></i> Confirmar Asistencia</button>
+      </div>
+      
+    </div>
+    <div class="footers">
+     
+      <button class="heartbeat boton" id="shareButton"  >
+        <i class="fa-brands fa-whatsapp"></i> Compartir por WhatsApp
+      </button>
+    </div>
+  </div>
+
+  <div class="container-carousel">
+    <div class="carruseles" id="slider">
+        <section class="slider-section">
+          <a href="https://snackbowling.netlify.app/pages/cumples">
+            <img src ="./images/slider3.png">
+          </a>
+        </section>
+        <section class="slider-section">
+          <img src="./images/slider2.png">
+        </section>
+        <section class="slider-section">
+          <a href="https://snackbowling.netlify.app/pages/eventos">
+            <img src="./images/slider1.png">
+          </a>
+        </section>
+        <!-- <section class="slider-section">
+            <img src="img/4.jpg">
+        </section> -->
+    </div>
+    <div class="btn-left"><i class='bx bx-chevron-left'></i></div>
+    <div class="btn-right"><i class='bx bx-chevron-right'></i></div>
+</div>
+
+  <div class="footers">
+    <button id="confettiButton" >🎉</button>
+  </div>
+</div>
+
+
+
+<footer class="footer">
+  <div class="social-media">
+    <a href="https://instagram.com/snackbowling" target="_blank"><i class="fab fa-instagram"></i></a>
+    <a href="https://facebook.com/snackbowling" target="_blank"><i class="fab fa-facebook"></i></a>
+    <a href="https://www.linkedin.com/company/71763114/" target="_blank"><i class="fab fa-liSnkedin"></i></a>
+  </div>
+  <div class="contact-info">
+    <p>realizado por:</p>
+    <a href="https://tucumple.com.ar/"><img class="logo" src="images/logoByn.svg" alt=""></a>
+  </div>
+</footer>
+
+<script src="js/variables.js"></script>
+<script src="js/invitaciones.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+
+<!-- Agregar la biblioteca Font Awesome -->
+<script src="https://kit.fontawesome.com/8cced7e539.js" crossorigin="anonymous"></script>
+
+</body>
+</html>

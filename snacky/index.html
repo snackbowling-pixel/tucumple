@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta property="og:image" content="https://teinvito.netlify.app/images/logo.png">
+
+<title>Invitaciones Virtuales</title>
+<link rel="stylesheet" href="styles.css?v=3">
+<link rel="shortcut icon" href="images/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Madimi+One&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="form-page">
+
+<div class="wrapper">
+  <div class="container form-card">
+    <header class="form-header">
+      <img src="images/logoS.png" alt="Snacky" class="form-logo">
+      <h1 class="form-title">¡Generá tu invitación!</h1>
+      <p class="form-subtitle">Solo te toma 1 minuto.</p>
+    </header>
+
+    <form id="userForm" novalidate>
+
+      <!-- ====== Seccion 1: Datos del cumple ====== -->
+      <section class="form-section">
+        <h2 class="form-section-title"><i class="fa-solid fa-cake-candles"></i> Datos del cumple</h2>
+
+        <div class="form-group">
+          <label for="name">Nombre del cumpleañero</label>
+          <input type="text" id="name" required placeholder="Ej: Joaquín" autocomplete="off">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="birthday">Fecha</label>
+            <input type="date" id="birthday" required>
+          </div>
+          <div class="form-group">
+            <label for="time">Hora</label>
+            <input type="time" id="time" required>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====== Seccion 2: Personalizacion ====== -->
+      <section class="form-section">
+        <h2 class="form-section-title"><i class="fa-solid fa-palette"></i> Personalizá la invitación</h2>
+
+        <div class="form-group">
+          <label for="background">Temática</label>
+          <select id="background" name="background">
+            <option value="" disabled selected hidden>Elegí una temática…</option>
+          </select>
+          <small class="hint">Opcional si subís foto propia abajo</small>
+          <div id="bgPreview" class="bg-preview" hidden>
+            <img id="bgPreviewImg" alt="Preview del fondo">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="customPhoto">Foto propia (opcional)</label>
+          <label for="customPhoto" class="file-dropzone" id="fileDropzone">
+            <i class="fa-solid fa-cloud-arrow-up"></i>
+            <span class="dropzone-text">Hacé click para subir una foto</span>
+            <span class="dropzone-hint">JPG, PNG o WebP · máx 10 MB</span>
+          </label>
+          <input type="file" id="customPhoto" accept="image/jpeg,image/png,image/webp" hidden>
+          <div id="customPhotoPreview" class="bg-preview" hidden>
+            <img id="customPhotoImg" alt="Preview de foto propia">
+            <button type="button" class="btn-remove" id="removeCustomPhoto" title="Quitar foto">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="customMessage">Mensaje del cumpleañero (opcional)</label>
+          <textarea id="customMessage" rows="2" maxlength="200" placeholder="Ej: ¡Cumplo 8 y los espero a todos!"></textarea>
+          <small class="hint counter"><span id="msgCounter">0</span>/200</small>
+        </div>
+      </section>
+
+      <!-- ====== Seccion 3: Contacto ====== -->
+      <section class="form-section">
+        <h2 class="form-section-title"><i class="fa-solid fa-mobile-screen-button"></i> Para confirmar asistencia</h2>
+
+        <div class="form-group">
+          <label for="phone">Tu número de celular</label>
+          <div class="input-with-prefix">
+            <span class="input-prefix">+54</span>
+            <input type="tel" id="phone" required placeholder="1112345678" inputmode="numeric" maxlength="10">
+          </div>
+          <small class="hint">10 dígitos, sin el 0 ni el 15</small>
+        </div>
+      </section>
+
+      <button type="submit" id="submitBtn" class="submit-btn">
+        <span class="submit-label">
+          <i class="fa-solid fa-paper-plane"></i> Generar invitación
+        </span>
+        <span class="submit-loading" hidden>
+          <span class="spinner"></span> Guardando…
+        </span>
+      </button>
+      <div id="formStatus" class="status-msg" hidden></div>
+    </form>
+  </div>
+
+  <footer class="footer">
+    <div class="social-media">
+      <a href="https://instagram.com/snackbowling" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+      <a href="https://facebook.com/snackbowling" target="_blank" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+      <a href="https://www.linkedin.com/company/71763114/" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+    </div>
+    <a href="https://tucumple.com.ar/"><img class="logo" src="images/logoByn.svg" alt=""></a>
+  </footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
+<script src="js/image-utils.js"></script>
+<script src="index.js"></script>
+<script src="https://kit.fontawesome.com/8cced7e539.js" crossorigin="anonymous"></script>
+
+</body>
+</html>
