@@ -173,15 +173,64 @@
     if (!inv.length) {
       recentEl.innerHTML = '<li class="muted">No hay invitaciones todavía</li>';
     } else {
-      recentEl.innerHTML = inv.slice(0, 5).map(function (i) {
-        var d = new Date(i.created_at);
-        var when = d.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit' }) +
-                   ' ' + ('0'+d.getHours()).slice(-2) + ':' + ('0'+d.getMinutes()).slice(-2);
-        return '<li>' +
-          '<span>' + escapeHtml(i.child_name) + '</span>' +
-          '<span class="meta">' + when + ' · 👁 ' + (i.views_count || 0) + '</span>' +
-          '</li>';
+      var dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+      var monthNames = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+      recentEl.innerHTML = inv.slice(0, 8).map(function (i) {
+        var bday = new Date(i.birthday + 'T00:00:00');
+        var dayLabel = dayNames[bday.getDay()] + ' ' + bday.getDate() + ' ' + monthNames[bday.getMonth()];
+        var time = i.start_time ? i.start_time.slice(0, 5) : '--:--';
+        return '<li class="recent-item">' +
+          '<div class="recent-main">' +
+            '<span class="recent-name">' + escapeHtml(i.child_name) + '</span>' +
+            '<span class="recent-views">👁 ' + (i.views_count || 0) + '</span>' +
+          '</div>' +
+          '<div class="recent-sub">' +
+            '<span><i class="fa-regular fa-calendar"></i> ' + dayLabel + '</span>' +
+            '<span><i class="fa-regular fa-clock"></i> ' + time + '</span>' +
+          '</div>' +
+        '</li>';
       }).join('');
+    }
+  }
+
+  // ============================================
+  // RESET DE INVITACIONES
+  // ============================================
+  async function resetInvitations() {
+    var first = confirm(
+      '¿Borrar TODAS las invitaciones?\n\n' +
+      'Esto borra invitaciones, RSVPs y fotos custom de la base de datos. ' +
+      'Los fondos temáticos del admin NO se tocan.\n\n' +
+      'Esta acción no se puede deshacer.'
+    );
+    if (!first) return;
+
+    var confirmText = prompt('Para confirmar, escribí: RESET');
+    if (confirmText !== 'RESET') {
+      if (confirmText !== null) alert('Cancelado. Tenés que escribir RESET exacto.');
+      return;
+    }
+
+    try {
+      // 1) Primero borrar fotos custom del storage
+      var photos = await supabase
+        .from('invitations')
+        .select('custom_photo_path')
+        .not('custom_photo_path', 'is', null);
+      if (photos.data && photos.data.length) {
+        var paths = photos.data.map(function (p) { return p.custom_photo_path; });
+        await supabase.storage.from('user-photos').remove(paths);
+      }
+
+      // 2) Borrar todas las invitaciones (rsvp se borran en cascada)
+      var del = await supabase.from('invitations').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+      if (del.error) throw del.error;
+
+      showToast('✅ Métricas reseteadas');
+      loadMetrics();
+    } catch (err) {
+      console.error(err);
+      alert('Error al resetear: ' + (err.message || 'desconocido'));
     }
   }
 
@@ -211,6 +260,9 @@
     await supabase.auth.signOut();
     showLogin();
   });
+
+  var resetBtn = document.getElementById('resetMetricsBtn');
+  if (resetBtn) resetBtn.addEventListener('click', resetInvitations);
 
   // ============================================
   // PREVIEW del archivo seleccionado

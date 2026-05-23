@@ -232,6 +232,64 @@ button:not(:disabled):active { transform: translateY(1px); }
 }
 .muted { color: #9ca3af; font-style: italic; }
 
+/* Items detallados en últimas invitaciones */
+.recent-item {
+  display: flex !important;
+  flex-direction: column;
+  align-items: stretch !important;
+  gap: 4px;
+}
+.recent-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.recent-name { font-weight: 600; color: #1f2937; font-size: 0.95rem; }
+.recent-views {
+  background: #fff5ed;
+  color: #92400e;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+.recent-sub {
+  display: flex;
+  gap: 14px;
+  color: #6b7280;
+  font-size: 0.8rem;
+}
+.recent-sub i { margin-right: 4px; color: #ff6b6b; }
+
+/* Header de métricas con botón reset */
+.metrics-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  gap: 10px;
+}
+.metrics-header h2 { margin: 0 !important; }
+
+.btn-reset {
+  background: #fff !important;
+  color: #b91c1c !important;
+  border: 1px solid #fecaca !important;
+  font-size: 0.8rem !important;
+  padding: 6px 12px !important;
+  border-radius: 8px !important;
+  cursor: pointer;
+  font-weight: 600 !important;
+  display: inline-flex !important;
+  align-items: center;
+  gap: 6px;
+  transition: background .15s, border-color .15s;
+}
+.btn-reset:hover {
+  background: #fef2f2 !important;
+  border-color: #fca5a5 !important;
+}
+
 /* ============================================
    UPLOAD
    ============================================ */
