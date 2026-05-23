@@ -23,8 +23,26 @@
 
 <!-- Hero: nombre del cumpleañero -->
 <div class="invite-hero">
+  <!-- Confeti flotante de fondo (CSS animation) -->
+  <div class="hero-confetti" aria-hidden="true">
+    <span class="confetti c1">✦</span>
+    <span class="confetti c2">●</span>
+    <span class="confetti c3">▲</span>
+    <span class="confetti c4">✦</span>
+    <span class="confetti c5">●</span>
+    <span class="confetti c6">★</span>
+    <span class="confetti c7">▲</span>
+    <span class="confetti c8">●</span>
+    <span class="confetti c9">✦</span>
+    <span class="confetti c10">★</span>
+  </div>
   <div class="invite-hero-inner" id="userData"></div>
 </div>
+
+<!-- Onda SVG separadora -->
+<svg class="hero-wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true">
+  <path d="M0,64 C240,128 480,0 720,48 C960,96 1200,32 1440,80 L1440,120 L0,120 Z" fill="#ffffff"/>
+</svg>
 
 <!-- Logo superpuesto entre hero y card (efecto avatar) -->
 <a class="invite-brand" href="https://snackbowling.netlify.app/pages/cumples">
@@ -84,8 +102,11 @@
         <span class="countdown-num" id="cdMinutes">—</span>
         <span class="countdown-unit">min</span>
       </div>
+      <div class="countdown-box">
+        <span class="countdown-num" id="cdSeconds">—</span>
+        <span class="countdown-unit">seg</span>
+      </div>
     </div>
-    <!-- Texto legacy para JS que no use las cajas -->
     <p id="countdownTimer" hidden></p>
   </section>
 

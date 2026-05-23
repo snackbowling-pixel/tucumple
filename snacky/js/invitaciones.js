@@ -176,31 +176,43 @@
 
   function capitalize(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
 
+  var countdownInterval = null;
+
   function renderCountdown(startDate) {
-    var today = new Date();
-    var target = new Date(startDate.getTime());
-    var legacyEl = document.getElementById('countdownTimer');
-    var daysEl  = document.getElementById('cdDays');
-    var hoursEl = document.getElementById('cdHours');
-    var minsEl  = document.getElementById('cdMinutes');
-    var section = document.getElementById('countdownSection');
+    function tick() {
+      var today  = new Date();
+      var target = new Date(startDate.getTime());
+      var legacyEl = document.getElementById('countdownTimer');
+      var daysEl  = document.getElementById('cdDays');
+      var hoursEl = document.getElementById('cdHours');
+      var minsEl  = document.getElementById('cdMinutes');
+      var secsEl  = document.getElementById('cdSeconds');
+      var section = document.getElementById('countdownSection');
 
-    if (today > target) {
-      if (legacyEl) legacyEl.textContent = '¡Llegó el día!';
-      if (section) {
-        section.innerHTML = '<h2 class="countdown-title countdown-arrived">🎉 ¡Llegó el día!</h2>';
+      if (today > target) {
+        if (countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
+        if (legacyEl) legacyEl.textContent = '¡Llegó el día!';
+        if (section) {
+          section.innerHTML = '<h2 class="countdown-title countdown-arrived">🎉 ¡Llegó el día!</h2>';
+        }
+        return;
       }
-      return;
-    }
-    var ms = target.getTime() - today.getTime();
-    var days    = Math.floor(ms / 86400000);
-    var hours   = Math.floor((ms % 86400000) / 3600000);
-    var minutes = Math.floor((ms % 3600000) / 60000);
+      var ms = target.getTime() - today.getTime();
+      var days    = Math.floor(ms / 86400000);
+      var hours   = Math.floor((ms % 86400000) / 3600000);
+      var minutes = Math.floor((ms % 3600000) / 60000);
+      var seconds = Math.floor((ms % 60000) / 1000);
 
-    if (legacyEl) legacyEl.textContent = 'Faltan ' + days + ' días, ' + hours + ' horas, y ' + minutes + ' minutos para el cumpleaños';
-    if (daysEl)  daysEl.textContent  = days;
-    if (hoursEl) hoursEl.textContent = hours;
-    if (minsEl)  minsEl.textContent  = minutes;
+      if (legacyEl) legacyEl.textContent = 'Faltan ' + days + ' días, ' + hours + ' horas, y ' + minutes + ' minutos';
+      if (daysEl)  daysEl.textContent  = days;
+      if (hoursEl) hoursEl.textContent = pad2(hours);
+      if (minsEl)  minsEl.textContent  = pad2(minutes);
+      if (secsEl)  secsEl.textContent  = pad2(seconds);
+    }
+
+    tick();
+    if (countdownInterval) clearInterval(countdownInterval);
+    countdownInterval = setInterval(tick, 1000);
   }
 
   function setupShareButton(inv) {
