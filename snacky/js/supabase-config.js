@@ -21,5 +21,14 @@ window.SNACKY_CONFIG = {
   venueName: 'Snack Bowling',
   venueAddress: 'Avenida del Libertador 13054, Martinez',
   // Duracion default del evento en horas (para el calendar)
-  defaultEventDurationHours: 2
+  defaultEventDurationHours: 2,
+  // ============================================
+  // FEATURE FLAGS (cambiar entre true/false y listo)
+  // ============================================
+  // Permitir que los padres suban una foto propia al crear la invitacion.
+  // false = el campo no aparece en el form. Las invitaciones ya existentes
+  // con foto custom siguen mostrandola normalmente.
+  features: {
+    allowCustomPhoto: false
+  }
 };

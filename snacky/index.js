@@ -26,6 +26,24 @@
   var submitBtn   = document.getElementById('submitBtn');
   var statusEl    = document.getElementById('formStatus');
 
+  // ============================================
+  // FEATURE FLAGS
+  // ============================================
+  var features = (window.SNACKY_CONFIG && window.SNACKY_CONFIG.features) || {};
+  var allowCustomPhoto = features.allowCustomPhoto !== false; // default true
+
+  if (!allowCustomPhoto) {
+    // Ocultar la seccion de foto custom + el hint del select
+    var photoDropzone = document.getElementById('fileDropzone');
+    var photoGroup = photoInput ? photoInput.closest('.form-group') : null;
+    if (photoGroup) photoGroup.hidden = true;
+    // Tambien sacar el hint "Opcional si subis foto propia abajo" del select
+    var bgHint = bgSelect ? bgSelect.parentNode.querySelector('.hint') : null;
+    if (bgHint) bgHint.hidden = true;
+    // Y hacer el select obligatorio
+    if (bgSelect) bgSelect.required = true;
+  }
+
   // Restringir fecha a futuro
   document.getElementById('birthday').setAttribute('min', new Date().toISOString().split('T')[0]);
 
