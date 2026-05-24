@@ -890,6 +890,41 @@ h2.form-section-title {
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
+/* Opt-in marketing */
+.optin-box {
+  padding: 14px 16px;
+  background: linear-gradient(135deg, #fff5ed 0%, #ffe2cc 100%);
+  border-radius: 12px;
+  border: 1px solid #ffdab3;
+}
+.optin-toggle {
+  display: flex !important;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+  margin: 0 !important;
+  font-size: 0.92rem !important;
+  font-weight: normal !important;
+  color: #374151 !important;
+  line-height: 1.4;
+}
+.optin-toggle input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--color, #f4843e);
+  cursor: pointer;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+.optin-toggle strong { color: #1f2937; }
+.optin-fields {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed rgba(244, 132, 62, 0.3);
+}
+.optin-fields .form-group { margin-bottom: 10px; }
+.optin-fields .hint { color: #92400e; }
+
 /* Status messages */
 .status-msg {
   margin-top: 14px;

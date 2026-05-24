@@ -119,6 +119,16 @@
     });
   }
 
+  // Opt-in marketing: mostrar/ocultar nombre+email al togglear
+  var optInCheck = document.getElementById('optInMarketing');
+  var optInFields = document.getElementById('optinFields');
+  if (optInCheck && optInFields) {
+    optInCheck.addEventListener('change', function () {
+      optInFields.hidden = !optInCheck.checked;
+      if (optInCheck.checked) document.getElementById('optInName').focus();
+    });
+  }
+
   // File dropzone visual feedback
   var dropzone = document.getElementById('fileDropzone');
   function setDropzoneSelected(hasFile, fileName) {
@@ -258,10 +268,13 @@
         custom_photo_path: customPhotoPath,
         custom_message: customMessage || null,
         expires_at: expiresAt
-      });
+      }).select('id').maybeSingle();
       if (insert.error) throw insert.error;
 
-      // 5) Redirigir
+      // 5) Si tildó opt-in marketing, guardar subscriber (fire & forget)
+      saveSubscriberIfOptedIn(insert.data && insert.data.id);
+
+      // 6) Redirigir
       window.location.href = 'inv.html?id=' + encodeURIComponent(slug);
     } catch (err) {
       console.error(err);
@@ -273,6 +286,27 @@
       }
     }
   });
+
+  // Guarda subscriber si tildó el opt-in. Fire & forget: si falla
+  // (ej email duplicado) no rompe el flujo de la invitación.
+  function saveSubscriberIfOptedIn(invitationId) {
+    if (!optInCheck || !optInCheck.checked) return;
+    var name = (document.getElementById('optInName').value || '').trim();
+    var email = (document.getElementById('optInEmail').value || '').trim().toLowerCase();
+    if (!name || !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return;
+
+    supabase.from('subscribers').insert({
+      name: name,
+      email: email,
+      source: 'snacky-form',
+      invitation_id: invitationId || null
+    }).then(function (r) {
+      // Si el email ya estaba subscrito, es OK — silenciar el conflicto
+      if (r.error && r.error.code !== '23505') {
+        console.warn('No se pudo guardar subscriber:', r.error.message);
+      }
+    });
+  }
 
   // ============================================
   // helpers
