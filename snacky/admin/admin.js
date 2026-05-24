@@ -280,6 +280,78 @@
   });
 
   // ============================================
+  // UPLOAD por URL (descarga via CORS proxy)
+  // ============================================
+  var bgUrlInput = document.getElementById('bgUrl');
+  var bgUrlBtn   = document.getElementById('bgUrlBtn');
+  var bgUrlSearch = document.getElementById('bgUrlSearch');
+
+  // Link rápido para buscar en Google Images usando el nombre como query
+  function updateSearchLink() {
+    var name = (document.getElementById('bgName').value || '').trim();
+    if (bgUrlSearch) {
+      bgUrlSearch.href = name
+        ? 'https://www.google.com/search?tbm=isch&q=' + encodeURIComponent(name + ' fondo HD')
+        : 'https://www.google.com/imghp';
+    }
+  }
+  document.getElementById('bgName').addEventListener('input', updateSearchLink);
+  updateSearchLink();
+
+  if (bgUrlBtn) bgUrlBtn.addEventListener('click', async function () {
+    var url = (bgUrlInput.value || '').trim();
+    if (!url) return;
+    if (!/^https?:\/\//i.test(url)) {
+      alert('La URL tiene que empezar con http:// o https://');
+      return;
+    }
+
+    bgUrlBtn.disabled = true;
+    var originalText = bgUrlBtn.innerHTML;
+    bgUrlBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Bajando…';
+
+    try {
+      // Intentar fetch directo primero. Si falla por CORS, usar proxy publico.
+      var blob = null;
+      try {
+        var direct = await fetch(url, { mode: 'cors' });
+        if (direct.ok) blob = await direct.blob();
+      } catch (e) { /* fallthrough al proxy */ }
+
+      if (!blob) {
+        // Proxy publico (corsproxy.io). Para producción podés migrar a un
+        // Cloudflare Worker propio si querés evitar dependencia externa.
+        var proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(url);
+        var resp = await fetch(proxyUrl);
+        if (!resp.ok) throw new Error('No se pudo descargar (HTTP ' + resp.status + ')');
+        blob = await resp.blob();
+      }
+
+      if (!blob || !blob.type.startsWith('image/')) {
+        throw new Error('La URL no es una imagen');
+      }
+
+      // Crear un File desde el blob para usar el flujo existente
+      var fileName = url.split('/').pop().split('?')[0] || 'image';
+      var file = new File([blob], fileName, { type: blob.type });
+
+      // Setear el input file con DataTransfer asi el submit funciona igual
+      var dt = new DataTransfer();
+      dt.items.add(file);
+      bgFileInput.files = dt.files;
+      bgFileInput.dispatchEvent(new Event('change'));
+
+      bgUrlInput.value = '';
+    } catch (err) {
+      console.error(err);
+      alert('Error: ' + err.message + '\n\nTip: si el sitio bloquea descargas, abrí la imagen en una pestaña nueva (botón derecho → "Abrir imagen en pestaña nueva"), copiá esa URL y probá de nuevo.');
+    } finally {
+      bgUrlBtn.disabled = false;
+      bgUrlBtn.innerHTML = originalText;
+    }
+  });
+
+  // ============================================
   // SUBIR NUEVO FONDO
   // ============================================
   // Mostrar/ocultar el input para nueva categoria
