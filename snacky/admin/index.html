@@ -90,6 +90,34 @@
         </div>
       </section>
 
+      <section class="subscribers-section">
+        <div class="metrics-header">
+          <h2><i class="fa-solid fa-envelope-open-text"></i> Subscribers <span id="subsCount" class="subs-count">0</span></h2>
+          <div class="subs-actions">
+            <input type="search" id="subsSearch" placeholder="🔍 Buscar…" class="subs-search">
+            <button id="exportCsvBtn" class="btn-secondary">
+              <i class="fa-solid fa-file-csv"></i> Exportar CSV
+            </button>
+          </div>
+        </div>
+        <div id="subsTableWrap" class="subs-table-wrap">
+          <table class="subs-table">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Vino de</th>
+                <th>Cuándo</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="subsTbody">
+              <tr><td colspan="5" class="muted" style="text-align:center;padding:24px">Cargando…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
       <section class="upload-section">
         <h2><i class="fa-solid fa-cloud-arrow-up"></i> Subir nuevo fondo</h2>
         <form id="uploadForm">

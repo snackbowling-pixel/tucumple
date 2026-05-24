@@ -82,8 +82,115 @@
     userEmail.textContent = user.email;
     loadBackgrounds();
     loadMetrics();
+    loadSubscribers();
     cleanupExpiredPhotos();
   }
+
+  // ============================================
+  // SUBSCRIBERS (opt-in marketing)
+  // ============================================
+  var allSubscribers = [];
+
+  async function loadSubscribers() {
+    var tbody = document.getElementById('subsTbody');
+    if (!tbody) return;
+    var resp = await supabase
+      .from('subscribers')
+      .select('id, name, email, created_at, unsubscribed_at, invitation:invitation_id (child_name)')
+      .order('created_at', { ascending: false });
+    if (resp.error) {
+      tbody.innerHTML = '<tr><td colspan="5" class="muted" style="text-align:center;padding:24px">Error: ' + escapeHtml(resp.error.message) + '</td></tr>';
+      return;
+    }
+    allSubscribers = resp.data || [];
+    renderSubscribers();
+  }
+
+  function renderSubscribers() {
+    var tbody = document.getElementById('subsTbody');
+    var search = (document.getElementById('subsSearch').value || '').toLowerCase().trim();
+    var rows = allSubscribers.filter(function (s) {
+      if (!search) return true;
+      return s.name.toLowerCase().indexOf(search) !== -1 ||
+             s.email.toLowerCase().indexOf(search) !== -1;
+    });
+
+    document.getElementById('subsCount').textContent = allSubscribers.length;
+
+    if (!rows.length) {
+      tbody.innerHTML = '<tr><td colspan="5" class="muted" style="text-align:center;padding:24px">' +
+        (allSubscribers.length ? 'Sin resultados' : 'Nadie se subscribió todavía') + '</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = rows.map(function (s) {
+      var when = new Date(s.created_at).toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: '2-digit' });
+      var inv  = s.invitation && s.invitation.child_name ? s.invitation.child_name : '—';
+      var unsubClass = s.unsubscribed_at ? ' sub-unsubscribed' : '';
+      var unsubBtn = s.unsubscribed_at
+        ? '<span class="sub-badge-unsub">Baja</span>'
+        : '<button class="btn-icon btn-danger" data-action="unsub" data-id="' + s.id + '" title="Dar de baja"><i class="fa-solid fa-user-slash"></i></button>';
+      return '<tr class="sub-row' + unsubClass + '">' +
+        '<td>' + escapeHtml(s.name) + '</td>' +
+        '<td><a href="mailto:' + escapeAttr(s.email) + '">' + escapeHtml(s.email) + '</a></td>' +
+        '<td>' + escapeHtml(inv) + '</td>' +
+        '<td>' + when + '</td>' +
+        '<td style="text-align:right">' + unsubBtn + '</td>' +
+      '</tr>';
+    }).join('');
+  }
+
+  document.getElementById('subsSearch').addEventListener('input', renderSubscribers);
+
+  // Unsubscribe (delegación)
+  document.getElementById('subsTbody').addEventListener('click', async function (ev) {
+    var btn = ev.target.closest('button[data-action="unsub"]');
+    if (!btn) return;
+    if (!confirm('¿Dar de baja este subscriber? No se borra, solo se marca.')) return;
+    var resp = await supabase.from('subscribers')
+      .update({ unsubscribed_at: new Date().toISOString() })
+      .eq('id', btn.dataset.id);
+    if (resp.error) {
+      showToast('Error: ' + resp.error.message, 'error');
+      return;
+    }
+    showToast('Subscriber dado de baja');
+    loadSubscribers();
+  });
+
+  // Exportar a CSV
+  document.getElementById('exportCsvBtn').addEventListener('click', function () {
+    if (!allSubscribers.length) { alert('No hay subscribers para exportar'); return; }
+    var header = ['name', 'email', 'invitation_child_name', 'created_at', 'unsubscribed_at'];
+    var rows = allSubscribers.map(function (s) {
+      return [
+        s.name,
+        s.email,
+        (s.invitation && s.invitation.child_name) || '',
+        s.created_at,
+        s.unsubscribed_at || ''
+      ];
+    });
+    function csvEscape(v) {
+      var s = String(v == null ? '' : v);
+      if (/[",\n]/.test(s)) s = '"' + s.replace(/"/g, '""') + '"';
+      return s;
+    }
+    var csv = [header.join(',')]
+      .concat(rows.map(function (r) { return r.map(csvEscape).join(','); }))
+      .join('\n');
+
+    // BOM para Excel/Sheets renderee bien los acentos
+    var blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'subscribers-' + new Date().toISOString().slice(0,10) + '.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+  });
 
   // ============================================
   // CLEANUP: borra fotos personales vencidas
