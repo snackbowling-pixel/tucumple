@@ -162,6 +162,27 @@
       <h2>Editar fondo</h2>
       <form id="editForm">
         <input type="hidden" id="editId">
+        <input type="hidden" id="editOldPath">
+
+        <!-- Imagen actual + reemplazo -->
+        <div class="form-group">
+          <label>Imagen</label>
+          <div class="edit-image-row">
+            <img id="editImagePreview" alt="Imagen actual" class="edit-current-img">
+            <div class="edit-image-actions">
+              <label class="btn-secondary edit-file-btn">
+                <i class="fa-solid fa-image"></i> Cambiar archivo
+                <input type="file" id="editImageFile" accept="image/jpeg,image/png,image/webp" hidden>
+              </label>
+              <div class="edit-url-row">
+                <input type="url" id="editImageUrl" placeholder="o pegar URL…">
+                <button type="button" id="editImageUrlBtn" class="btn-secondary">Bajar</button>
+              </div>
+              <small class="hint" id="editImageStatus" hidden></small>
+            </div>
+          </div>
+        </div>
+
         <div class="form-group">
           <label for="editName">Nombre</label>
           <input type="text" id="editName" required>

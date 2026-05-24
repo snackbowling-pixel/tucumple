@@ -556,9 +556,20 @@
     }
   });
 
+  // Buffer del nuevo blob a subir al guardar (si el admin cambia la imagen)
+  var editNewImageBlob = null;
+
   function openEditModal(bg) {
     document.getElementById('editId').value = bg.id;
+    document.getElementById('editOldPath').value = bg.storage_path || '';
     document.getElementById('editName').value = bg.name;
+
+    // Reset imagen
+    editNewImageBlob = null;
+    document.getElementById('editImagePreview').src = bg.image_url;
+    document.getElementById('editImageFile').value = '';
+    document.getElementById('editImageUrl').value = '';
+    document.getElementById('editImageStatus').hidden = true;
 
     // Poblar select de categorias del modal con las disponibles
     var categories = Array.from(
@@ -574,6 +585,70 @@
     document.getElementById('editCategoryNew').value = '';
     document.getElementById('editActive').checked = !!bg.active;
     editModal.hidden = false;
+  }
+
+  // ============================================
+  // Manejo de cambio de imagen en el modal de edición
+  // ============================================
+  function setEditImageStatus(msg, type) {
+    var el = document.getElementById('editImageStatus');
+    el.textContent = msg;
+    el.className = 'hint edit-status-' + (type || 'info');
+    el.hidden = false;
+  }
+
+  // Cuando el admin elige un archivo nuevo
+  document.getElementById('editImageFile').addEventListener('change', async function (ev) {
+    var file = ev.target.files && ev.target.files[0];
+    if (!file) return;
+    await processEditImageFile(file);
+  });
+
+  // Cuando el admin pega una URL
+  document.getElementById('editImageUrlBtn').addEventListener('click', async function () {
+    var url = (document.getElementById('editImageUrl').value || '').trim();
+    if (!url) return;
+    if (!/^https?:\/\//i.test(url)) { alert('URL inválida'); return; }
+    setEditImageStatus('Descargando…');
+    try {
+      var blob = null;
+      try {
+        var direct = await fetch(url, { mode: 'cors' });
+        if (direct.ok) blob = await direct.blob();
+      } catch (e) {}
+      if (!blob) {
+        var resp = await fetch('https://corsproxy.io/?' + encodeURIComponent(url));
+        if (!resp.ok) throw new Error('HTTP ' + resp.status);
+        blob = await resp.blob();
+      }
+      if (!blob || !blob.type.startsWith('image/')) throw new Error('No es una imagen');
+      var fileName = url.split('/').pop().split('?')[0] || 'image';
+      await processEditImageFile(new File([blob], fileName, { type: blob.type }));
+      document.getElementById('editImageUrl').value = '';
+    } catch (err) {
+      setEditImageStatus('Error: ' + err.message, 'error');
+    }
+  });
+
+  async function processEditImageFile(file) {
+    setEditImageStatus('Comprimiendo…');
+    try {
+      var result = await ImageUtils.compressToWebP(file, {
+        maxWidth: 1920, maxHeight: 1920, quality: 0.85
+      });
+      editNewImageBlob = result.blob;
+      // Preview con el blob comprimido
+      var url = URL.createObjectURL(result.blob);
+      document.getElementById('editImagePreview').src = url;
+      setEditImageStatus(
+        '✓ Nueva imagen lista (' + ImageUtils.formatBytes(result.originalSize) +
+        ' → ' + ImageUtils.formatBytes(result.finalSize) + '). Click "Guardar cambios" para aplicar.',
+        'success'
+      );
+    } catch (err) {
+      setEditImageStatus('Error: ' + err.message, 'error');
+      editNewImageBlob = null;
+    }
   }
 
   // Mostrar input para nueva categoria al elegir esa opcion en el modal
@@ -598,6 +673,7 @@
   editForm.addEventListener('submit', async function (ev) {
     ev.preventDefault();
     var id = document.getElementById('editId').value;
+    var oldPath = document.getElementById('editOldPath').value;
     var name = document.getElementById('editName').value.trim();
     var editSelect = document.getElementById('editCategorySelect');
     var category = editSelect.value === '__new__'
@@ -605,14 +681,40 @@
       : editSelect.value.trim();
     var active = document.getElementById('editActive').checked;
 
-    var resp = await supabase.from('backgrounds').update({
-      name: name, category: category, active: active
-    }).eq('id', id);
+    var update = { name: name, category: category, active: active };
+
+    // Si el admin cambió la imagen, subir la nueva primero
+    if (editNewImageBlob) {
+      try {
+        setEditImageStatus('Subiendo nueva imagen…');
+        var fileName = ImageUtils.uniqueFileName(name, 'webp');
+        var newPath = 'fondos/' + fileName;
+        var up = await supabase.storage.from('background-images')
+          .upload(newPath, editNewImageBlob, { contentType: 'image/webp', cacheControl: '31536000' });
+        if (up.error) throw up.error;
+        var pub = supabase.storage.from('background-images').getPublicUrl(newPath);
+        update.image_url = pub.data.publicUrl;
+        update.storage_path = newPath;
+      } catch (err) {
+        setEditImageStatus('Error subiendo imagen: ' + err.message, 'error');
+        return;
+      }
+    }
+
+    var resp = await supabase.from('backgrounds').update(update).eq('id', id);
 
     if (resp.error) {
       showToast('Error: ' + resp.error.message, 'error');
       return;
     }
+
+    // Si se reemplazó la imagen y el path anterior NO era legacy, borrar el viejo
+    if (editNewImageBlob && oldPath && oldPath.indexOf('legacy/') !== 0) {
+      var del = await supabase.storage.from('background-images').remove([oldPath]);
+      if (del.error) console.warn('No se pudo borrar la imagen vieja:', del.error.message);
+    }
+
+    editNewImageBlob = null;
     editModal.hidden = true;
     showToast('Fondo actualizado');
     loadBackgrounds();

@@ -528,6 +528,64 @@ button:not(:disabled):active { transform: translateY(1px); }
 }
 .modal-actions button { flex: 1; }
 
+/* Bloque de cambio de imagen en el modal de edición */
+.edit-image-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.edit-current-img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  flex-shrink: 0;
+  background: #f3f4f6;
+}
+.edit-image-actions {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+.edit-file-btn {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  font-size: 0.85rem !important;
+  padding: 8px 12px !important;
+  text-align: center;
+  justify-content: center;
+}
+.edit-url-row {
+  display: flex;
+  gap: 6px;
+}
+.edit-url-row input[type="url"] {
+  flex: 1;
+  padding: 8px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  min-width: 0;
+}
+.edit-url-row input[type="url"]:focus {
+  outline: none;
+  border-color: #ff6b6b;
+  box-shadow: 0 0 0 2px rgba(255,107,107,0.15);
+}
+.edit-url-row button {
+  padding: 8px 12px !important;
+  font-size: 0.85rem !important;
+  white-space: nowrap;
+}
+.edit-status-info    { color: #2563eb; }
+.edit-status-success { color: #047857; }
+.edit-status-error   { color: #b91c1c; }
+
 /* ============================================
    TOAST
    ============================================ */
