@@ -1118,7 +1118,7 @@ body.invite-page .relleno {
   position: relative;
   z-index: 3;
   text-align: center;
-  padding: 60px 20px 40px;
+  padding: 60px 20px 10px;
   color: #fff;
   min-height: 360px;
   display: flex;
